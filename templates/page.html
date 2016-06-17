@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script src="/scripts/jquery-3.0.0.min.js"></script>
+
+        <script type="text/javascript" language="javascript">
+            var a = ["пресвятейший", "милый", "мощный", "крутой", "смешной", "фантастический", "прекрасный"];
+                last_name = "";
+                i = -1;
+     	function call() {
+     	  var msg   = $('#formx').serialize();
+              user_name = document.getElementsByName("enter_your_name")[0].value;
+            $.ajax({
+              type: 'POST',
+              url: 'http://127.0.0.1:8000/page/',
+              data: msg,
+              success: function(data) {
+                $('.results').html(data);
+                  if (last_name != user_name) {
+                      i = i + 1;
+                      if (i >= a.length)
+                              i = 0;
+                      last_name = user_name;
+                  }
+
+                  show(user_name);
+              },
+              error:  function(xhr, str){
+    	    alert('Возникла ошибка: ' + xhr.responseCode);
+              }
+            });
+
+        }
+
+            function show(name) {
+                alert("Рад видеть тебя снова, " + a[i]+ " " + name + "!");
+            }
+    </script>
+</head>
+<body>
+    <h1>Name page</h1>
+    {% if form.errors %}
+        <p style="color: red;">
+            Please correct the error{{ form.errors|pluralize }} below.
+        </p>
+    {% endif %}
+
+    <form method="POST" id="formx" action="javascript:void(null);" onsubmit="call()">
+        <table>
+    {{ form.as_table }}
+        </table>
+        {% csrf_token %}
+        <input type="submit" value="Submit">
+
+    </form>
+
+    {% if my_result != None %}
+        <h1>{{ "Рад Видеть тебя снова"  }} {{ my_result }}</h1>
+
+    {% endif %}
+
+
+
+
+
+</body>
+</html>
